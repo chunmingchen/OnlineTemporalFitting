@@ -7,7 +7,6 @@
 #include <string.h>
 #include <iostream>
 #include <math.h>
-#include "omp.h"
 
 #include "online_quad_bezier_fit.h"
 using namespace std;
@@ -27,7 +26,7 @@ public:
                           {1, 4, 9, 16, 25, 36, 49, 64, 81, 100} };
         int n = 10;
         int sampling = n-1;
-        int i, s;
+        int t, s;
 
         vector<OnlineQuadBezierFit<float> > onlineAry(3);
         vector<float> rmsErrAry;  // mean square error;  xyz, dim
@@ -35,12 +34,14 @@ public:
 
 
         //////////////////////////////////////
-        /// test online version
+        /// incremental fitting
         //////////////////////////////////////
-        for (s = 0; s<3; s++)
-            for (i=0; i<n; i++)
+        // for each time step 
+        for (t=0; t<n; t++)
+            // assign for each data sequence
+            for (s = 0; s<3; s++)
             {
-                onlineAry[s].addData(seq[s][i], (double)i/(n-1));
+                onlineAry[s].addData(seq[s][t], (double)t/(n-1));
             }
 
         fitOnlineQuadBezier(quadBezierAry, rmsErrAry, onlineAry, n);
