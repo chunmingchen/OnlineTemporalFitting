@@ -21,6 +21,7 @@ class ErrorModeling{
 public:
     void test_online_scalar()
     {
+        // generate 3 scalar sequences of length 10
         float seq[3][10] = {{1, 2, 3, 100, 5, 6, 7, 8, 9, 10},
                           {1, 8, 27, 100, 125, 196, 343, 512, 729, 1111},
                           {1, 4, 9, 16, 25, 36, 49, 64, 81, 100} };

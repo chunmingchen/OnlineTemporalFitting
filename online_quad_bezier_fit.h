@@ -9,6 +9,17 @@
 
 using namespace std;
 
+///
+/// OnlineQuadBezierFit class stores constant number (6) of parameters to fit a temporal data sequence
+/// into a quadratic Bezier function.  
+///
+/// typename T: usually double or float
+///
+/// Use addData() to incrementally add new data element.
+///
+/// Note: Use std::vector<OnlineQuadBezierFit<>> to hold an array of fitted temporal sequences
+///       After all time steps are added, call fitOnlineQuadBezier() to obtain fitting results
+///
 template <typename T>
 class OnlineQuadBezierFit {
 
@@ -44,8 +55,13 @@ public:
 
 };
 
-// input: online data info , sequence length (n)
-// output : ctrlAry, stderrAry
+///
+/// Should be called after all data sequences are collected by OnlineQuadBezierFit class
+/// output : ctrlAry - Control point values, 
+///          stderrAry - Standard errors of fitting
+/// input : onlineAry - an array of online data info
+///         n - sequence length (time steps)
+///
 template <typename T>
 void fitOnlineQuadBezier(vector<T> &ctrlAry, vector<T> &stderrAry, const vector<OnlineQuadBezierFit<T> > &onlineAry, int n)
 {
@@ -72,7 +88,7 @@ void fitOnlineQuadBezier(vector<T> &ctrlAry, vector<T> &stderrAry, const vector<
 
     }
 
-#pragma omp parallel for
+#pragma omp parallel for // openmp parallel
     for (i=0; i<pts; i++)
     {
         const T &p0 = onlineAry[i].y0;
@@ -83,7 +99,8 @@ void fitOnlineQuadBezier(vector<T> &ctrlAry, vector<T> &stderrAry, const vector<
 
         // sum est y
         T sum_est_y2; // assume initialized
-#if 0
+
+#if 0 // debug
         for (int j=0; j<=sampling; j++)
         {
             double t = (double)j/sampling;
